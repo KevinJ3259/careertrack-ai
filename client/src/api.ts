@@ -1,0 +1,108 @@
+import type { Interview, JobApplication, Status } from "./types";
+
+const API_URL = import.meta.env.VITE_API_URL ?? "http://localhost:4000/api";
+const TOKEN_KEY = "job_tracker_token";
+
+export function getToken() {
+  return localStorage.getItem(TOKEN_KEY);
+}
+
+export function setToken(token: string) {
+  localStorage.setItem(TOKEN_KEY, token);
+}
+
+export function clearToken() {
+  localStorage.removeItem(TOKEN_KEY);
+}
+
+async function request<T>(path: string, options: RequestInit = {}): Promise<T> {
+  const response = await fetch(`${API_URL}${path}`, {
+    ...options,
+    headers: {
+      "Content-Type": "application/json",
+      ...(getToken() ? { Authorization: `Bearer ${getToken()}` } : {}),
+      ...options.headers
+    }
+  });
+
+  if (!response.ok) {
+    const body = await response.json().catch(() => null);
+    throw new Error(body?.message ?? "Request failed.");
+  }
+
+  if (response.status === 204) return undefined as T;
+  return response.json() as Promise<T>;
+}
+
+export const api = {
+  register: (name: string, email: string, password: string) =>
+    request<{ token: string }>("/auth/register", {
+      method: "POST",
+      body: JSON.stringify({ name, email, password })
+    }),
+
+  login: (email: string, password: string) =>
+    request<{ token: string }>("/auth/login", {
+      method: "POST",
+      body: JSON.stringify({ email, password })
+    }),
+
+  listApplications: (status?: Status) =>
+    request<JobApplication[]>(`/applications${status ? `?status=${status}` : ""}`),
+
+  createApplication: (body: Partial<JobApplication>) =>
+    request<JobApplication>("/applications", {
+      method: "POST",
+      body: JSON.stringify(body)
+    }),
+
+  updateApplication: (id: string, body: Partial<JobApplication>) =>
+    request<JobApplication>(`/applications/${id}`, {
+      method: "PATCH",
+      body: JSON.stringify(body)
+    }),
+
+  deleteApplication: (id: string) =>
+    request<void>(`/applications/${id}`, { method: "DELETE" }),
+
+   listInterviews: () =>
+    request<Interview[]>("/interviews"),
+
+  createInterview: (body: {
+    applicationId: string;
+    scheduledAt: string;
+    interviewType: string;
+    interviewerName?: string;
+    location?: string;
+    meetingLink?: string;
+    preparationNotes?: string;
+    followUpNotes?: string;
+    outcome?: string;
+  }) =>
+    request<Interview>("/interviews", {
+      method: "POST",
+      body: JSON.stringify(body)
+    }),
+
+  updateInterview: (id: string, body: Partial<Interview>) =>
+    request<Interview>(`/interviews/${id}`, {
+      method: "PATCH",
+      body: JSON.stringify(body)
+    }),
+
+  deleteInterview: (id: string) =>
+    request<void>(`/interviews/${id}`, {
+      method: "DELETE"
+    }),
+
+  generateCoverLetter: (body: {
+    company: string;
+    role: string;
+    jobDescription: string;
+    candidateBackground: string;
+  }) =>
+    request<{ draft: string }>("/ai/cover-letter", {
+      method: "POST",
+      body: JSON.stringify(body)
+    })
+};
