@@ -1,4 +1,9 @@
-import type { Interview, JobApplication, Status } from "./types";
+import type { 
+  Interview, 
+  JobApplication,
+  ResumeVersion, 
+  Status 
+} from "./types";
 
 const API_URL = import.meta.env.VITE_API_URL ?? "http://localhost:4000/api";
 const TOKEN_KEY = "job_tracker_token";
@@ -95,6 +100,40 @@ export const api = {
       method: "DELETE"
     }),
 
+     listResumeVersions: () =>
+    request<ResumeVersion[]>("/resumes"),
+
+  createResumeVersion: (body: {
+    title: string;
+    resumeText: string;
+    isDefault?: boolean;
+  }) =>
+    request<ResumeVersion>("/resumes", {
+      method: "POST",
+      body: JSON.stringify(body)
+    }),
+
+  updateResumeVersion: (
+    id: string,
+    body: Partial<
+      Pick<ResumeVersion, "title" | "resumeText" | "isDefault">
+    >
+  ) =>
+    request<ResumeVersion>(`/resumes/${id}`, {
+      method: "PATCH",
+      body: JSON.stringify(body)
+    }),
+
+  duplicateResumeVersion: (id: string) =>
+    request<ResumeVersion>(`/resumes/${id}/duplicate`, {
+      method: "POST"
+    }),
+
+  deleteResumeVersion: (id: string) =>
+    request<void>(`/resumes/${id}`, {
+      method: "DELETE"
+    }),
+
   generateCoverLetter: (body: {
     company: string;
     role: string;
@@ -102,6 +141,22 @@ export const api = {
     candidateBackground: string;
   }) =>
     request<{ draft: string }>("/ai/cover-letter", {
+      method: "POST",
+      body: JSON.stringify(body)
+    })
+
+     analyzeResume: (body: {
+    resumeText: string;
+    jobDescription: string;
+  }) =>
+    request<{
+      matchScore: number;
+      summary: string;
+      strengths: string[];
+      missingKeywords: string[];
+      improvements: string[];
+      revisedProfessionalSummary: string;
+    }>("/ai/resume-analysis", {
       method: "POST",
       body: JSON.stringify(body)
     })

@@ -7,6 +7,7 @@ import { applicationsRouter } from "./routes/applications.js";
 import { aiRouter } from "./routes/ai.js";
 import { errorHandler } from "./middleware/error.js";
 import { interviewsRouter } from "./routes/interviews.js";
+import { resumesRouter } from "./routes/resumes.js";
 
 const app = express();
 
@@ -22,7 +23,7 @@ app.use("/api/applications", applicationsRouter);
 app.use("/api/ai", aiRouter);
 app.use(errorHandler);
 app.use("/api/interviews", interviewsRouter);
-
+app.use("/api/resumes", resumesRouter);
 const server = app.listen(env.PORT, () => {
   console.log(`API running at http://localhost:${env.PORT}`);
 });

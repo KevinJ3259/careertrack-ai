@@ -34,3 +34,13 @@ export type Interview = {
     role: string;
   };
 };
+
+export type ResumeVersion = {
+  id: string;
+  title: string;
+  resumeText: string;
+  isDefault: boolean;
+  userId: string;
+  createdAt: string;
+  updatedAt: string;
+};

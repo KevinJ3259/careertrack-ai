@@ -16,13 +16,14 @@ enum ApplicationStatus {
 }
 
 model User {
-  id           String           @id @default(cuid())
-  name         String
-  email        String           @unique
-  passwordHash String
-  applications JobApplication[]
-  createdAt    DateTime         @default(now())
-  updatedAt    DateTime         @updatedAt
+  id             String           @id @default(cuid())
+  name           String
+  email          String           @unique
+  passwordHash   String
+  applications   JobApplication[]
+  resumeVersions ResumeVersion[]
+  createdAt      DateTime         @default(now())
+  updatedAt      DateTime         @updatedAt
 }
 
 model JobApplication {
@@ -65,4 +66,20 @@ model Interview {
 
   @@index([applicationId])
   @@index([scheduledAt])
+}
+
+model ResumeVersion {
+  id         String  @id @default(cuid())
+  title      String
+  resumeText String
+  isDefault  Boolean @default(false)
+
+  userId String
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([userId])
+  @@index([userId, isDefault])
 }
