@@ -8,6 +8,8 @@ import InterviewTracker from "./components/InterviewTracker";
 import ResumeAnalyzer from "./components/ResumeAnalyzer";
 import ResumeVersionManager from "./components/ResumeVersionManager";
 import AnalyticsDashboard from "./components/AnalyticsDashboard";
+import DashboardFilters from "./components/DashboardFilters";
+import GoalTracker from "./components/GoalTracker";
 
 import type {
   Interview,
@@ -80,6 +82,12 @@ export default function App() {
     revisedProfessionalSummary: string;
   } | null>(null);
 
+  const [dashboardFilters, setDashboardFilters] = useState({
+  status: "ALL" as Status | "ALL",
+  company: "",
+  location: ""
+});
+
   async function loadApplications() {
     try {
       setApplications(await api.listApplications());
@@ -121,6 +129,48 @@ export default function App() {
     }
   }, [authenticated]);
 
+  const companies = useMemo(
+  () =>
+    Array.from(
+      new Set(
+        applications
+          .map((application) => application.company)
+          .filter(Boolean)
+      )
+    ).sort(),
+  [applications]
+);
+
+const locations = useMemo(
+  () =>
+    Array.from(
+      new Set(
+        applications
+          .map((application) => application.location)
+          .filter((location): location is string => Boolean(location))
+      )
+    ).sort(),
+  [applications]
+);
+
+const dashboardApplications = useMemo(() => {
+  return applications.filter((application) => {
+    const matchesStatus =
+      dashboardFilters.status === "ALL" ||
+      application.status === dashboardFilters.status;
+
+    const matchesCompany =
+      !dashboardFilters.company ||
+      application.company === dashboardFilters.company;
+
+    const matchesLocation =
+      !dashboardFilters.location ||
+      application.location === dashboardFilters.location;
+
+    return matchesStatus && matchesCompany && matchesLocation;
+  });
+}, [applications, dashboardFilters]);
+
   const visibleApplications = useMemo(
     () =>
       filter === "ALL"
@@ -128,6 +178,22 @@ export default function App() {
         : applications.filter((item) => item.status === filter),
     [applications, filter]
   );
+
+  const dashboardTotals = useMemo(() => {
+  const interviews = applications.filter((application) =>
+    ["INTERVIEW", "OFFER"].includes(application.status)
+  ).length;
+
+  const offers = applications.filter(
+    (application) => application.status === "OFFER"
+  ).length;
+
+  return {
+    totalApplications: applications.length,
+    interviews,
+    offers
+  };
+}, [applications]);
 
   const counts = useMemo(() => {
     return statuses.reduce<Record<Status, number>>(
@@ -442,7 +508,28 @@ export default function App() {
         onFilterChange={setFilter}
       />
 
-      <AnalyticsDashboard applications={applications} />
+      <DashboardFilters
+  filters={dashboardFilters}
+  companies={companies}
+  locations={locations}
+  statuses={statuses}
+  onChange={setDashboardFilters}
+  onClear={() =>
+    setDashboardFilters({
+      status: "ALL",
+      company: "",
+      location: ""
+    })
+  }
+/>
+
+<AnalyticsDashboard applications={dashboardApplications} />
+
+<GoalTracker
+  totalApplications={dashboardTotals.totalApplications}
+  interviews={dashboardTotals.interviews}
+  offers={dashboardTotals.offers}
+/>
 
       <section className="content-grid">
         <ApplicationTracker
