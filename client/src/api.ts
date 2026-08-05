@@ -3,7 +3,8 @@ import type {
   InterviewCoachPlan, 
   JobApplication,
   MockInterviewFeedback,
-  ResumeVersion, 
+  ResumeVersion,
+  SavedMockInterviewResult, 
   Status 
 } from "./types";
 
@@ -184,5 +185,32 @@ generateMockInterviewFeedback: (body: {
   request<MockInterviewFeedback>("/ai/mock-interview-feedback", {
     method: "POST",
     body: JSON.stringify(body)
+  }),
+
+  listMockInterviewResults: () =>
+  request<SavedMockInterviewResult[]>("/mock-interviews"),
+
+saveMockInterviewResult: (body: {
+  company: string;
+  role: string;
+  question: string;
+  answer: string;
+  overallScore: number;
+  relevanceScore: number;
+  clarityScore: number;
+  structureScore: number;
+  strengths: string[];
+  improvements: string[];
+  improvedAnswer: string;
+  followUpQuestion: string;
+}) =>
+  request<SavedMockInterviewResult>("/mock-interviews", {
+    method: "POST",
+    body: JSON.stringify(body)
+  }),
+
+deleteMockInterviewResult: (id: string) =>
+  request<void>(`/mock-interviews/${id}`, {
+    method: "DELETE"
   })
 };

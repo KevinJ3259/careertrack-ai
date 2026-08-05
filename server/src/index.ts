@@ -8,6 +8,7 @@ import { aiRouter } from "./routes/ai.js";
 import { errorHandler } from "./middleware/error.js";
 import { interviewsRouter } from "./routes/interviews.js";
 import { resumesRouter } from "./routes/resumes.js";
+import { mockInterviewsRouter } from "./routes/mockInterviews.js";
 
 const app = express();
 
@@ -24,6 +25,7 @@ app.use("/api/ai", aiRouter);
 app.use(errorHandler);
 app.use("/api/interviews", interviewsRouter);
 app.use("/api/resumes", resumesRouter);
+app.use("/api/mock-interviews", mockInterviewsRouter);
 const server = app.listen(env.PORT, () => {
   console.log(`API running at http://localhost:${env.PORT}`);
 });
@@ -37,3 +39,13 @@ async function shutdown() {
 
 process.on("SIGINT", shutdown);
 process.on("SIGTERM", shutdown);
+
+export type SavedMockInterviewResult = MockInterviewFeedback & {
+  id: string;
+  company: string;
+  role: string;
+  question: string;
+  answer: string;
+  createdAt: string;
+  updatedAt: string;
+};
