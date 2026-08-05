@@ -7,6 +7,7 @@ import Dashboard from "./components/Dashboard";
 import InterviewTracker from "./components/InterviewTracker";
 import ResumeAnalyzer from "./components/ResumeAnalyzer";
 import ResumeVersionManager from "./components/ResumeVersionManager";
+import AnalyticsDashboard from "./components/AnalyticsDashboard";
 
 import type {
   Interview,
@@ -440,6 +441,8 @@ export default function App() {
         counts={counts}
         onFilterChange={setFilter}
       />
+
+      <AnalyticsDashboard applications={applications} />
 
       <section className="content-grid">
         <ApplicationTracker
