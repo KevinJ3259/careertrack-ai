@@ -77,3 +77,13 @@ export type MockInterviewFeedback = {
   improvedAnswer: string;
   followUpQuestion: string;
 };
+
+export type SavedMockInterviewResult = MockInterviewFeedback & {
+  id: string;
+  company: string;
+  role: string;
+  question: string;
+  answer: string;
+  createdAt: string;
+  updatedAt: string;
+};

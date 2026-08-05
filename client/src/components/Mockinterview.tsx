@@ -1,3 +1,4 @@
+import MockInterviewProgress from "./MockInterviewProgress";
 import { useEffect, useMemo, useState } from "react";
 import { api } from "../api";
 import type {
@@ -302,6 +303,8 @@ export default function MockInterview({
           </button>
         </div>
       )}
+
+      <MockInterviewProgress results={savedResults} />
 
       <div className="saved-mock-interviews">
         <div className="section-heading">

@@ -19,13 +19,13 @@ app.get("/api/health", (_req, res) => {
   res.json({ status: "ok" });
 });
 
-app.use("/api/auth", authRouter);
-app.use("/api/applications", applicationsRouter);
 app.use("/api/ai", aiRouter);
-app.use(errorHandler);
 app.use("/api/interviews", interviewsRouter);
 app.use("/api/resumes", resumesRouter);
 app.use("/api/mock-interviews", mockInterviewsRouter);
+
+app.use(errorHandler);
+
 const server = app.listen(env.PORT, () => {
   console.log(`API running at http://localhost:${env.PORT}`);
 });
@@ -40,12 +40,3 @@ async function shutdown() {
 process.on("SIGINT", shutdown);
 process.on("SIGTERM", shutdown);
 
-export type SavedMockInterviewResult = MockInterviewFeedback & {
-  id: string;
-  company: string;
-  role: string;
-  question: string;
-  answer: string;
-  createdAt: string;
-  updatedAt: string;
-};
