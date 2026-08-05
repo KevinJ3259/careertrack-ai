@@ -1,12 +1,27 @@
 import { FormEvent, useEffect, useMemo, useState } from "react";
-import { api, clearToken, getToken, setToken } from "./api";
+import { api, clearToken, getToken } from "./api";
+import ApplicationList from "./components/ApplicationList";
+import ApplicationTracker from "./components/ApplicationTracker";
 import AuthScreen from "./components/AuthScreen";
 import Dashboard from "./components/Dashboard";
-import ApplicationTracker from "./components/ApplicationTracker";
-import ApplicationList from "./components/ApplicationList";
-import type { Interview, JobApplication, Status } from "./types";
+import InterviewTracker from "./components/InterviewTracker";
+import ResumeAnalyzer from "./components/ResumeAnalyzer";
+import ResumeVersionManager from "./components/ResumeVersionManager";
 
-const statuses: Status[] = ["SAVED", "APPLIED", "INTERVIEW", "OFFER", "REJECTED"];
+import type {
+  Interview,
+  JobApplication,
+  ResumeVersion,
+  Status
+} from "./types";
+
+const statuses: Status[] = [
+  "SAVED",
+  "APPLIED",
+  "INTERVIEW",
+  "OFFER",
+  "REJECTED"
+];
 
 const emptyForm = {
   company: "",
@@ -29,13 +44,26 @@ const emptyInterviewForm = {
   outcome: ""
 };
 
+const emptyResumeVersionForm = {
+  id: "",
+  title: "",
+  resumeText: "",
+  isDefault: false
+};
+
 export default function App() {
   const [authenticated, setAuthenticated] = useState(Boolean(getToken()));
+
   const [applications, setApplications] = useState<JobApplication[]>([]);
   const [interviews, setInterviews] = useState<Interview[]>([]);
+  const [resumeVersions, setResumeVersions] = useState<ResumeVersion[]>([]);
 
-  const [interviewForm, setInterviewForm] = useState(emptyInterviewForm);
   const [form, setForm] = useState(emptyForm);
+  const [interviewForm, setInterviewForm] = useState(emptyInterviewForm);
+  const [resumeVersionForm, setResumeVersionForm] = useState(
+    emptyResumeVersionForm
+  );
+
   const [filter, setFilter] = useState<Status | "ALL">("ALL");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
@@ -53,10 +81,11 @@ export default function App() {
 
   async function loadApplications() {
     try {
-      setError("");
       setApplications(await api.listApplications());
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Unable to load applications.");
+      setError(
+        err instanceof Error ? err.message : "Unable to load applications."
+      );
     }
   }
 
@@ -64,14 +93,30 @@ export default function App() {
     try {
       setInterviews(await api.listInterviews());
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Unable to load interviews.");
+      setError(
+        err instanceof Error ? err.message : "Unable to load interviews."
+      );
+    }
+  }
+
+  async function loadResumeVersions() {
+    try {
+      setResumeVersions(await api.listResumeVersions());
+    } catch (err) {
+      setError(
+        err instanceof Error
+          ? err.message
+          : "Unable to load resume versions."
+      );
     }
   }
 
   useEffect(() => {
     if (authenticated) {
+      setError("");
       void loadApplications();
       void loadInterviews();
+      void loadResumeVersions();
     }
   }, [authenticated]);
 
@@ -86,10 +131,18 @@ export default function App() {
   const counts = useMemo(() => {
     return statuses.reduce<Record<Status, number>>(
       (result, status) => {
-        result[status] = applications.filter((item) => item.status === status).length;
+        result[status] = applications.filter(
+          (item) => item.status === status
+        ).length;
         return result;
       },
-      { SAVED: 0, APPLIED: 0, INTERVIEW: 0, OFFER: 0, REJECTED: 0 }
+      {
+        SAVED: 0,
+        APPLIED: 0,
+        INTERVIEW: 0,
+        OFFER: 0,
+        REJECTED: 0
+      }
     );
   }, [applications]);
 
@@ -103,7 +156,9 @@ export default function App() {
       setForm(emptyForm);
       await loadApplications();
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Unable to add application.");
+      setError(
+        err instanceof Error ? err.message : "Unable to add application."
+      );
     } finally {
       setLoading(false);
     }
@@ -111,10 +166,13 @@ export default function App() {
 
   async function updateStatus(id: string, status: Status) {
     try {
+      setError("");
       await api.updateApplication(id, { status });
       await loadApplications();
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Unable to update status.");
+      setError(
+        err instanceof Error ? err.message : "Unable to update status."
+      );
     }
   }
 
@@ -122,17 +180,22 @@ export default function App() {
     if (!window.confirm("Delete this application?")) return;
 
     try {
+      setError("");
       await api.deleteApplication(id);
       await loadApplications();
       await loadInterviews();
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Unable to delete application.");
+      setError(
+        err instanceof Error ? err.message : "Unable to delete application."
+      );
     }
   }
 
   async function generateLetter() {
     if (!form.company || !form.role || form.jobDescription.length < 40) {
-      setError("Enter a company, role, and a fuller job description first.");
+      setError(
+        "Enter a company, role, and a fuller job description first."
+      );
       return;
     }
 
@@ -150,7 +213,9 @@ export default function App() {
 
       setCoverLetter(result.draft);
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Unable to generate a letter.");
+      setError(
+        err instanceof Error ? err.message : "Unable to generate a letter."
+      );
     } finally {
       setLoading(false);
     }
@@ -179,7 +244,9 @@ export default function App() {
 
       setResumeAnalysis(result);
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Unable to analyze the resume.");
+      setError(
+        err instanceof Error ? err.message : "Unable to analyze the resume."
+      );
     } finally {
       setLoading(false);
     }
@@ -210,7 +277,9 @@ export default function App() {
       setInterviewForm(emptyInterviewForm);
       await loadInterviews();
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Unable to save the interview.");
+      setError(
+        err instanceof Error ? err.message : "Unable to save the interview."
+      );
     } finally {
       setLoading(false);
     }
@@ -220,11 +289,120 @@ export default function App() {
     if (!window.confirm("Delete this interview?")) return;
 
     try {
+      setError("");
       await api.deleteInterview(id);
       await loadInterviews();
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Unable to delete the interview.");
+      setError(
+        err instanceof Error ? err.message : "Unable to delete the interview."
+      );
     }
+  }
+
+  async function saveResumeVersion(event: FormEvent) {
+    event.preventDefault();
+
+    if (!resumeVersionForm.title.trim()) {
+      setError("Enter a name for this resume version.");
+      return;
+    }
+
+    if (resumeVersionForm.resumeText.trim().length < 50) {
+      setError("Paste at least 50 characters of resume text.");
+      return;
+    }
+
+    setLoading(true);
+    setError("");
+
+    try {
+      if (resumeVersionForm.id) {
+        await api.updateResumeVersion(resumeVersionForm.id, {
+          title: resumeVersionForm.title,
+          resumeText: resumeVersionForm.resumeText,
+          isDefault: resumeVersionForm.isDefault
+        });
+      } else {
+        await api.createResumeVersion({
+          title: resumeVersionForm.title,
+          resumeText: resumeVersionForm.resumeText,
+          isDefault: resumeVersionForm.isDefault
+        });
+      }
+
+      setResumeVersionForm(emptyResumeVersionForm);
+      await loadResumeVersions();
+    } catch (err) {
+      setError(
+        err instanceof Error
+          ? err.message
+          : "Unable to save the resume version."
+      );
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  function editResumeVersion(resume: ResumeVersion) {
+    setResumeVersionForm({
+      id: resume.id,
+      title: resume.title,
+      resumeText: resume.resumeText,
+      isDefault: resume.isDefault
+    });
+  }
+
+  async function duplicateResumeVersion(id: string) {
+    try {
+      setError("");
+      await api.duplicateResumeVersion(id);
+      await loadResumeVersions();
+    } catch (err) {
+      setError(
+        err instanceof Error
+          ? err.message
+          : "Unable to duplicate the resume."
+      );
+    }
+  }
+
+  async function makeDefaultResume(id: string) {
+    try {
+      setError("");
+      await api.updateResumeVersion(id, { isDefault: true });
+      await loadResumeVersions();
+    } catch (err) {
+      setError(
+        err instanceof Error
+          ? err.message
+          : "Unable to update the default resume."
+      );
+    }
+  }
+
+  async function removeResumeVersion(id: string) {
+    if (!window.confirm("Delete this resume version?")) return;
+
+    try {
+      setError("");
+      await api.deleteResumeVersion(id);
+      await loadResumeVersions();
+    } catch (err) {
+      setError(
+        err instanceof Error
+          ? err.message
+          : "Unable to delete the resume version."
+      );
+    }
+  }
+
+  function analyzeSavedResume(resume: ResumeVersion) {
+    setResumeText(resume.resumeText);
+
+    window.scrollTo({
+      top: 0,
+      behavior: "smooth"
+    });
   }
 
   if (!authenticated) {
@@ -237,11 +415,15 @@ export default function App() {
         <div>
           <p className="eyebrow">PORTFOLIO PROJECT</p>
           <h1>CareerTrack AI</h1>
-          <p>Organize applications, monitor progress, and prepare for interviews.</p>
+          <p>
+            Organize applications, monitor progress, and prepare for
+            interviews.
+          </p>
         </div>
 
         <button
           className="secondary"
+          type="button"
           onClick={() => {
             clearToken();
             setAuthenticated(false);
@@ -254,222 +436,66 @@ export default function App() {
       {error && <div className="alert">{error}</div>}
 
       <Dashboard
-  statuses={statuses}
-  counts={counts}
-  onFilterChange={setFilter}
-/>
+        statuses={statuses}
+        counts={counts}
+        onFilterChange={setFilter}
+      />
 
       <section className="content-grid">
-      <ApplicationTracker
-  form={form}
-  statuses={statuses}
-  loading={loading}
-  coverLetter={coverLetter}
-  onFormChange={setForm}
-  onSubmit={addApplication}
-  onGenerateLetter={generateLetter}
-  onCoverLetterChange={setCoverLetter}
-/>  
+        <ApplicationTracker
+          form={form}
+          statuses={statuses}
+          loading={loading}
+          coverLetter={coverLetter}
+          onFormChange={setForm}
+          onSubmit={addApplication}
+          onGenerateLetter={generateLetter}
+          onCoverLetterChange={setCoverLetter}
+        />
 
-      <ApplicationList
-  applications={visibleApplications}
-  filter={filter}
-  statuses={statuses}
-  onFilterChange={setFilter}
-  onStatusChange={updateStatus}
-  onDelete={removeApplication}
-/>  
+        <ApplicationList
+          applications={visibleApplications}
+          filter={filter}
+          statuses={statuses}
+          onFilterChange={setFilter}
+          onStatusChange={updateStatus}
+          onDelete={removeApplication}
+        />
       </section>
 
-      <section className="panel interview-tracker">
-        <div className="section-heading">
-          <div>
-            <p className="eyebrow">INTERVIEW TRACKER</p>
-            <h2>Schedule and prepare</h2>
-          </div>
-        </div>
+      <ResumeAnalyzer
+        resumeText={resumeText}
+        analysis={resumeAnalysis}
+        loading={loading}
+        onResumeTextChange={setResumeText}
+        onAnalyze={analyzeResume}
+      />
 
-        <div className="interview-layout">
-          <form onSubmit={addInterview}>
-            <label>
-              Job application
-              <select
-                required
-                value={interviewForm.applicationId}
-                onChange={(event) =>
-                  setInterviewForm({
-                    ...interviewForm,
-                    applicationId: event.target.value
-                  })
-                }
-              >
-                <option value="">Choose an application</option>
+      <InterviewTracker
+        applications={applications}
+        interviews={interviews}
+        form={interviewForm}
+        loading={loading}
+        onFormChange={setInterviewForm}
+        onSubmit={addInterview}
+        onDelete={removeInterview}
+      />
 
-                {applications.map((application) => (
-                  <option key={application.id} value={application.id}>
-                    {application.company} — {application.role}
-                  </option>
-                ))}
-              </select>
-            </label>
-
-            <label>
-              Date and time
-              <input
-                required
-                type="datetime-local"
-                value={interviewForm.scheduledAt}
-                onChange={(event) =>
-                  setInterviewForm({
-                    ...interviewForm,
-                    scheduledAt: event.target.value
-                  })
-                }
-              />
-            </label>
-
-            <label>
-              Interview type
-              <select
-                value={interviewForm.interviewType}
-                onChange={(event) =>
-                  setInterviewForm({
-                    ...interviewForm,
-                    interviewType: event.target.value
-                  })
-                }
-              >
-                <option>Phone Screen</option>
-                <option>Video Interview</option>
-                <option>Technical Interview</option>
-                <option>Behavioral Interview</option>
-                <option>On-site Interview</option>
-                <option>Final Interview</option>
-              </select>
-            </label>
-
-            <label>
-              Interviewer
-              <input
-                value={interviewForm.interviewerName}
-                onChange={(event) =>
-                  setInterviewForm({
-                    ...interviewForm,
-                    interviewerName: event.target.value
-                  })
-                }
-              />
-            </label>
-
-            <label>
-              Location
-              <input
-                value={interviewForm.location}
-                onChange={(event) =>
-                  setInterviewForm({
-                    ...interviewForm,
-                    location: event.target.value
-                  })
-                }
-              />
-            </label>
-
-            <label>
-              Meeting link
-              <input
-                type="url"
-                value={interviewForm.meetingLink}
-                onChange={(event) =>
-                  setInterviewForm({
-                    ...interviewForm,
-                    meetingLink: event.target.value
-                  })
-                }
-              />
-            </label>
-
-            <label>
-              Preparation notes
-              <textarea
-                rows={5}
-                value={interviewForm.preparationNotes}
-                onChange={(event) =>
-                  setInterviewForm({
-                    ...interviewForm,
-                    preparationNotes: event.target.value
-                  })
-                }
-              />
-            </label>
-
-            <label>
-              Outcome
-              <input
-                value={interviewForm.outcome}
-                onChange={(event) =>
-                  setInterviewForm({
-                    ...interviewForm,
-                    outcome: event.target.value
-                  })
-                }
-              />
-            </label>
-
-            <button disabled={loading} type="submit">
-              Save interview
-            </button>
-          </form>
-
-          <div className="interview-list">
-            {interviews.length === 0 && (
-              <div className="empty-state">No interviews scheduled yet.</div>
-            )}
-
-            {interviews.map((interview) => (
-              <article className="interview-card" key={interview.id}>
-                <p className="eyebrow">{interview.interviewType}</p>
-                <h3>{interview.application.role}</h3>
-                <p>{interview.application.company}</p>
-                <p>{new Date(interview.scheduledAt).toLocaleString()}</p>
-
-                {interview.interviewerName && (
-                  <p>Interviewer: {interview.interviewerName}</p>
-                )}
-
-                {interview.location && (
-                  <p>Location: {interview.location}</p>
-                )}
-
-                {interview.preparationNotes && (
-                  <p>Preparation: {interview.preparationNotes}</p>
-                )}
-
-                {interview.outcome && (
-                  <p>Outcome: {interview.outcome}</p>
-                )}
-
-                {interview.meetingLink && (
-                  <a
-                    href={interview.meetingLink}
-                    target="_blank"
-                    rel="noreferrer"
-                  >
-                    Join interview
-                  </a>
-                )}
-
-                <button
-                  className="danger-link"
-                  type="button"
-                  onClick={() => removeInterview(interview.id)}
-                >
-                  Delete
-                </button>
-              </article>
-            ))}
-          </div>
-        </div>
-      </section>
+      <ResumeVersionManager
+        resumes={resumeVersions}
+        form={resumeVersionForm}
+        loading={loading}
+        onFormChange={setResumeVersionForm}
+        onSubmit={saveResumeVersion}
+        onEdit={editResumeVersion}
+        onDuplicate={duplicateResumeVersion}
+        onAnalyze={analyzeSavedResume}
+        onMakeDefault={makeDefaultResume}
+        onDelete={removeResumeVersion}
+        onCancelEdit={() =>
+          setResumeVersionForm(emptyResumeVersionForm)
+        }
+      />
     </main>
   );
 }

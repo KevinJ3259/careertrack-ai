@@ -143,7 +143,7 @@ export const api = {
     request<{ draft: string }>("/ai/cover-letter", {
       method: "POST",
       body: JSON.stringify(body)
-    })
+    }),
 
      analyzeResume: (body: {
     resumeText: string;
