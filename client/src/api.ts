@@ -2,6 +2,7 @@ import type {
   Interview,
   InterviewCoachPlan, 
   JobApplication,
+  MockInterviewFeedback,
   ResumeVersion, 
   Status 
 } from "./types";
@@ -169,6 +170,18 @@ generateInterviewCoach: (body: {
   resumeText?: string;
 }) =>
   request<InterviewCoachPlan>("/ai/interview-coach", {
+    method: "POST",
+    body: JSON.stringify(body)
+  }),
+
+generateMockInterviewFeedback: (body: {
+  company: string;
+  role: string;
+  question: string;
+  answer: string;
+  jobDescription: string;
+}) =>
+  request<MockInterviewFeedback>("/ai/mock-interview-feedback", {
     method: "POST",
     body: JSON.stringify(body)
   })

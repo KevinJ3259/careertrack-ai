@@ -66,3 +66,14 @@ export type InterviewCoachPlan = {
   questionsToAsk: string[];
   preparationChecklist: string[];
 };
+
+export type MockInterviewFeedback = {
+  overallScore: number;
+  relevanceScore: number;
+  clarityScore: number;
+  structureScore: number;
+  strengths: string[];
+  improvements: string[];
+  improvedAnswer: string;
+  followUpQuestion: string;
+};

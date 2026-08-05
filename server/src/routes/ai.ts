@@ -208,3 +208,79 @@ ${data.resumeText ?? "No resume text was supplied."}
     });
   }
 });
+
+const mockInterviewFeedbackSchema = z.object({
+  company: z.string().trim().min(1).max(120),
+  role: z.string().trim().min(1).max(120),
+  question: z.string().trim().min(10).max(5000),
+  answer: z.string().trim().min(20).max(15000),
+  jobDescription: z.string().trim().min(100).max(20000)
+});
+
+aiRouter.post("/mock-interview-feedback", async (req, res) => {
+  const client = getOpenAIClient();
+
+  if (!client) {
+    res.status(503).json({
+      message: "The server does not have an OpenAI API key configured."
+    });
+    return;
+  }
+
+  const data = mockInterviewFeedbackSchema.parse(req.body);
+
+  const response = await client.responses.create({
+    model: env.OPENAI_MODEL,
+    instructions: `
+You are a careful interview coach.
+
+Evaluate only the interview question, candidate answer, role, company,
+and job description supplied by the user.
+
+Do not invent experience, credentials, accomplishments, or facts.
+
+Return valid JSON using exactly this structure:
+
+{
+  "overallScore": 0,
+  "relevanceScore": 0,
+  "clarityScore": 0,
+  "structureScore": 0,
+  "strengths": [""],
+  "improvements": [""],
+  "improvedAnswer": "",
+  "followUpQuestion": ""
+}
+
+All scores must be integers from 0 through 100.
+Keep the feedback constructive, concise, and actionable.
+The improved answer must not invent candidate experience.
+`,
+    input: `
+COMPANY:
+${data.company}
+
+ROLE:
+${data.role}
+
+JOB DESCRIPTION:
+${data.jobDescription}
+
+INTERVIEW QUESTION:
+${data.question}
+
+CANDIDATE ANSWER:
+${data.answer}
+`
+  });
+
+  try {
+    const feedback = JSON.parse(response.output_text);
+    res.json(feedback);
+  } catch {
+    res.status(502).json({
+      message:
+        "The AI mock-interview response could not be processed. Please try again."
+    });
+  }
+});

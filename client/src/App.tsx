@@ -11,6 +11,7 @@ import AnalyticsDashboard from "./components/AnalyticsDashboard";
 import DashboardFilters from "./components/DashboardFilters";
 import GoalTracker from "./components/GoalTracker";
 import InterviewCoach from "./components/InterviewCoach";
+import MockInterview from "./components/MockInterview";
 
 import type {
   Interview,
@@ -575,7 +576,9 @@ const dashboardApplications = useMemo(() => {
       <InterviewCoach
         applications={applications}
         resumeVersions={resumeVersions}
-/>
+      />
+
+      <MockInterview applications={applications} />
 
       <ResumeVersionManager
         resumes={resumeVersions}

@@ -585,3 +585,74 @@ textarea {
     grid-template-columns: 1fr;
   }
 }
+
+.mock-interview {
+  margin-top: 1rem;
+}
+
+.mock-interview-form {
+  display: grid;
+  gap: 1rem;
+}
+
+.mock-interview-results {
+  display: grid;
+  gap: 1rem;
+  margin-top: 1.5rem;
+}
+
+.mock-score-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 1rem;
+}
+
+.mock-score-grid article {
+  padding: 1rem;
+  border: 1px solid #e1e7ec;
+  border-radius: 12px;
+  background: #ffffff;
+}
+
+.mock-score-grid span {
+  display: block;
+  margin-bottom: 0.35rem;
+  color: #657488;
+}
+
+.mock-score-grid strong {
+  font-size: 1.7rem;
+}
+
+.mock-feedback-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1rem;
+}
+
+.mock-feedback-card {
+  padding: 1rem;
+  border: 1px solid #e1e7ec;
+  border-radius: 12px;
+  background: #ffffff;
+}
+
+.mock-feedback-card h3 {
+  margin-top: 0;
+}
+
+.mock-feedback-card ul {
+  padding-left: 1.25rem;
+}
+
+.mock-feedback-card p:last-child,
+.mock-feedback-card ul:last-child {
+  margin-bottom: 0;
+}
+
+@media (max-width: 800px) {
+  .mock-score-grid,
+  .mock-feedback-grid {
+    grid-template-columns: 1fr;
+  }
+}
