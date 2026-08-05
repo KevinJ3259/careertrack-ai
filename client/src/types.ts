@@ -44,3 +44,25 @@ export type ResumeVersion = {
   createdAt: string;
   updatedAt: string;
 };
+
+export type InterviewCoachPlan = {
+  jobSummary: string;
+  keySkills: string[];
+  behavioralQuestions: {
+    question: string;
+    whyItMatters: string;
+    starGuidance: {
+      situation: string;
+      task: string;
+      action: string;
+      result: string;
+    };
+  }[];
+  technicalQuestions: {
+    question: string;
+    answerGuidance: string;
+  }[];
+  studyTopics: string[];
+  questionsToAsk: string[];
+  preparationChecklist: string[];
+};

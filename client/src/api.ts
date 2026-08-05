@@ -1,5 +1,6 @@
 import type { 
-  Interview, 
+  Interview,
+  InterviewCoachPlan, 
   JobApplication,
   ResumeVersion, 
   Status 
@@ -145,19 +146,30 @@ export const api = {
       body: JSON.stringify(body)
     }),
 
-     analyzeResume: (body: {
-    resumeText: string;
-    jobDescription: string;
-  }) =>
-    request<{
-      matchScore: number;
-      summary: string;
-      strengths: string[];
-      missingKeywords: string[];
-      improvements: string[];
-      revisedProfessionalSummary: string;
-    }>("/ai/resume-analysis", {
-      method: "POST",
-      body: JSON.stringify(body)
-    })
+    analyzeResume: (body: {
+  resumeText: string;
+  jobDescription: string;
+}) =>
+  request<{
+    matchScore: number;
+    summary: string;
+    strengths: string[];
+    missingKeywords: string[];
+    improvements: string[];
+    revisedProfessionalSummary: string;
+  }>("/ai/resume-analysis", {
+    method: "POST",
+    body: JSON.stringify(body)
+  }),
+
+generateInterviewCoach: (body: {
+  company: string;
+  role: string;
+  jobDescription: string;
+  resumeText?: string;
+}) =>
+  request<InterviewCoachPlan>("/ai/interview-coach", {
+    method: "POST",
+    body: JSON.stringify(body)
+  })
 };

@@ -449,3 +449,139 @@ textarea {
   background: #2563eb;
   transition: width 0.25s ease;
 }
+
+.interview-coach {
+  margin-top: 1rem;
+}
+
+.interview-coach-controls {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1rem;
+  align-items: end;
+}
+
+.interview-coach-controls button {
+  min-height: 44px;
+}
+
+.interview-coach-selection {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem 1rem;
+  margin-top: 1rem;
+  padding: 0.85rem 1rem;
+  border: 1px solid #e1e7ec;
+  border-radius: 12px;
+  background: #f8fafc;
+}
+
+.interview-coach-selection span {
+  color: #657488;
+}
+
+.interview-coach-results {
+  display: grid;
+  gap: 1rem;
+  margin-top: 1.5rem;
+}
+
+.coach-section {
+  padding: 1rem;
+  border: 1px solid #e1e7ec;
+  border-radius: 12px;
+  background: #ffffff;
+}
+
+.coach-section h3 {
+  margin-top: 0;
+}
+
+.coach-section p:last-child,
+.coach-section ul:last-child {
+  margin-bottom: 0;
+}
+
+.coach-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.coach-tags span {
+  display: inline-block;
+  padding: 0.35rem 0.7rem;
+  border-radius: 999px;
+  background: #eef4ff;
+  color: #1d4ed8;
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+
+.coach-question-list {
+  display: grid;
+  gap: 0.75rem;
+}
+
+.coach-question {
+  border: 1px solid #e1e7ec;
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.coach-question summary {
+  cursor: pointer;
+  padding: 0.9rem 1rem;
+  font-weight: 700;
+  background: #f8fafc;
+}
+
+.coach-question[open] summary {
+  border-bottom: 1px solid #e1e7ec;
+}
+
+.coach-question-content {
+  padding: 1rem;
+}
+
+.star-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
+.star-grid > div {
+  padding: 0.85rem;
+  border: 1px solid #e1e7ec;
+  border-radius: 10px;
+  background: #fbfcfe;
+}
+
+.star-grid p {
+  margin-bottom: 0;
+}
+
+.coach-two-column {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1rem;
+}
+
+.coach-checklist {
+  display: grid;
+  gap: 0.6rem;
+  padding-left: 1.25rem;
+}
+
+.coach-section ul {
+  padding-left: 1.25rem;
+}
+
+@media (max-width: 800px) {
+  .interview-coach-controls,
+  .coach-two-column,
+  .star-grid {
+    grid-template-columns: 1fr;
+  }
+}

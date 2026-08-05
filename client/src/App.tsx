@@ -10,6 +10,7 @@ import ResumeVersionManager from "./components/ResumeVersionManager";
 import AnalyticsDashboard from "./components/AnalyticsDashboard";
 import DashboardFilters from "./components/DashboardFilters";
 import GoalTracker from "./components/GoalTracker";
+import InterviewCoach from "./components/InterviewCoach";
 
 import type {
   Interview,
@@ -570,6 +571,11 @@ const dashboardApplications = useMemo(() => {
         onSubmit={addInterview}
         onDelete={removeInterview}
       />
+
+      <InterviewCoach
+        applications={applications}
+        resumeVersions={resumeVersions}
+/>
 
       <ResumeVersionManager
         resumes={resumeVersions}

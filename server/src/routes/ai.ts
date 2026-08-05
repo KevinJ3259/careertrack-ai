@@ -8,6 +8,14 @@ export const aiRouter = Router();
 
 aiRouter.use(requireAuth);
 
+function getOpenAIClient() {
+  if (!env.OPENAI_API_KEY) {
+    return null;
+  }
+
+  return new OpenAI({ apiKey: env.OPENAI_API_KEY });
+}
+
 const coverLetterSchema = z.object({
   company: z.string().trim().min(1).max(120),
   role: z.string().trim().min(1).max(120),
@@ -16,7 +24,9 @@ const coverLetterSchema = z.object({
 });
 
 aiRouter.post("/cover-letter", async (req, res) => {
-  if (!env.OPENAI_API_KEY) {
+  const client = getOpenAIClient();
+
+  if (!client) {
     res.status(503).json({
       message: "The server does not have an OpenAI API key configured."
     });
@@ -24,7 +34,6 @@ aiRouter.post("/cover-letter", async (req, res) => {
   }
 
   const data = coverLetterSchema.parse(req.body);
-  const client = new OpenAI({ apiKey: env.OPENAI_API_KEY });
 
   const response = await client.responses.create({
     model: env.OPENAI_MODEL,
@@ -55,7 +64,9 @@ const resumeAnalysisSchema = z.object({
 });
 
 aiRouter.post("/resume-analysis", async (req, res) => {
-  if (!env.OPENAI_API_KEY) {
+  const client = getOpenAIClient();
+
+  if (!client) {
     res.status(503).json({
       message: "The server does not have an OpenAI API key configured."
     });
@@ -63,7 +74,6 @@ aiRouter.post("/resume-analysis", async (req, res) => {
   }
 
   const data = resumeAnalysisSchema.parse(req.body);
-  const client = new OpenAI({ apiKey: env.OPENAI_API_KEY });
 
   const response = await client.responses.create({
     model: env.OPENAI_MODEL,
@@ -102,6 +112,99 @@ ${data.jobDescription}
   } catch {
     res.status(502).json({
       message: "The AI response could not be processed. Please try again."
+    });
+  }
+});
+
+const interviewCoachSchema = z.object({
+  company: z.string().trim().min(1).max(120),
+  role: z.string().trim().min(1).max(120),
+  jobDescription: z.string().trim().min(100).max(20000),
+  resumeText: z.string().trim().min(100).max(30000).optional()
+});
+
+aiRouter.post("/interview-coach", async (req, res) => {
+  const client = getOpenAIClient();
+
+  if (!client) {
+    res.status(503).json({
+      message: "The server does not have an OpenAI API key configured."
+    });
+    return;
+  }
+
+  const data = interviewCoachSchema.parse(req.body);
+
+  const response = await client.responses.create({
+    model: env.OPENAI_MODEL,
+    instructions: `
+You are a careful interview coach.
+
+Use only the supplied company, role, job description, and optional resume text.
+Do not invent facts about the company, candidate, job, experience, education,
+credentials, accomplishments, or technologies.
+
+Return valid JSON using exactly this structure:
+
+{
+  "jobSummary": "",
+  "keySkills": [""],
+  "behavioralQuestions": [
+    {
+      "question": "",
+      "whyItMatters": "",
+      "starGuidance": {
+        "situation": "",
+        "task": "",
+        "action": "",
+        "result": ""
+      }
+    }
+  ],
+  "technicalQuestions": [
+    {
+      "question": "",
+      "answerGuidance": ""
+    }
+  ],
+  "studyTopics": [""],
+  "questionsToAsk": [""],
+  "preparationChecklist": [""]
+}
+
+Requirements:
+- jobSummary: 2 to 4 concise sentences.
+- keySkills: 5 to 10 items.
+- behavioralQuestions: 5 items.
+- technicalQuestions: 5 role-specific items. For nontechnical roles, use role-specific scenario questions.
+- studyTopics: 5 to 10 items.
+- questionsToAsk: 5 thoughtful questions.
+- preparationChecklist: 6 to 10 practical steps.
+- Keep all guidance concise, truthful, and actionable.
+- When resume text is supplied, tailor guidance only to experience explicitly present in it.
+`,
+    input: `
+COMPANY:
+${data.company}
+
+ROLE:
+${data.role}
+
+JOB DESCRIPTION:
+${data.jobDescription}
+
+CANDIDATE RESUME:
+${data.resumeText ?? "No resume text was supplied."}
+`
+  });
+
+  try {
+    const interviewPlan = JSON.parse(response.output_text);
+    res.json(interviewPlan);
+  } catch {
+    res.status(502).json({
+      message:
+        "The AI interview-coach response could not be processed. Please try again."
     });
   }
 });
