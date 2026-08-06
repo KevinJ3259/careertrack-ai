@@ -1,4 +1,4 @@
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
 import {
   CartesianGrid,
   Legend,
@@ -18,24 +18,55 @@ type MockInterviewProgressProps = {
 export default function MockInterviewProgress({
   results
 }: MockInterviewProgressProps) {
-  const chartData = useMemo(
-    () =>
-      [...results]
-        .sort(
-          (a, b) =>
-            new Date(a.createdAt).getTime() -
-            new Date(b.createdAt).getTime()
-        )
-        .map((result, index) => ({
-          attempt: `Attempt ${index + 1}`,
-          date: new Date(result.createdAt).toLocaleDateString(),
-          overall: result.overallScore,
-          relevance: result.relevanceScore,
-          clarity: result.clarityScore,
-          structure: result.structureScore
-        })),
-    [results]
-  );
+
+    const [companyFilter, setCompanyFilter] = useState("");
+    const [roleFilter, setRoleFilter] = useState(""); 
+
+  const companies = useMemo(
+  () =>
+    Array.from(
+      new Set(results.map((result) => result.company))
+    ).sort(),
+  [results]
+);
+
+const roles = useMemo(
+  () =>
+    Array.from(
+      new Set(results.map((result) => result.role))
+    ).sort(),
+  [results]
+);
+
+const chartData = useMemo(
+  () =>
+    [...results]
+      .filter((result) => {
+        const matchesCompany =
+          !companyFilter || result.company === companyFilter;
+
+        const matchesRole =
+          !roleFilter || result.role === roleFilter;
+
+        return matchesCompany && matchesRole;
+      })
+      .sort(
+        (a, b) =>
+          new Date(a.createdAt).getTime() -
+          new Date(b.createdAt).getTime()
+      )
+      .map((result, index) => ({
+        attempt: `Attempt ${index + 1}`,
+        date: new Date(result.createdAt).toLocaleDateString(),
+        company: result.company,
+        role: result.role,
+        overall: result.overallScore,
+        relevance: result.relevanceScore,
+        clarity: result.clarityScore,
+        structure: result.structureScore
+      })),
+  [results, companyFilter, roleFilter]
+);
 
   if (results.length === 0) {
     return (
@@ -62,6 +93,40 @@ export default function MockInterviewProgress({
           <h3>Mock interview improvement</h3>
         </div>
       </div>
+
+      <div className="mock-progress-filters">
+  <label>
+    Company
+    <select
+      value={companyFilter}
+      onChange={(event) => setCompanyFilter(event.target.value)}
+    >
+      <option value="">All companies</option>
+
+      {companies.map((company) => (
+        <option key={company} value={company}>
+          {company}
+        </option>
+      ))}
+    </select>
+  </label>
+
+  <label>
+    Role
+    <select
+      value={roleFilter}
+      onChange={(event) => setRoleFilter(event.target.value)}
+    >
+      <option value="">All roles</option>
+
+      {roles.map((role) => (
+        <option key={role} value={role}>
+          {role}
+        </option>
+      ))}
+    </select>
+  </label>
+</div>
 
       <div className="mock-progress-chart">
         <ResponsiveContainer width="100%" height={320}>
