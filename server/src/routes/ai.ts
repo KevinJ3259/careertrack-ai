@@ -284,3 +284,62 @@ ${data.answer}
     });
   }
 });
+
+const careerAssistantSchema = z.object({
+  message: z.string().trim().min(5).max(10000),
+  company: z.string().trim().max(120).optional(),
+  role: z.string().trim().max(120).optional(),
+  jobDescription: z.string().trim().max(20000).optional(),
+  resumeText: z.string().trim().max(30000).optional()
+});
+
+aiRouter.post("/career-assistant", async (req, res) => {
+  const client = getOpenAIClient();
+
+  if (!client) {
+    res.status(503).json({
+      message: "The server does not have an OpenAI API key configured."
+    });
+    return;
+  }
+
+  const data = careerAssistantSchema.parse(req.body);
+
+  const response = await client.responses.create({
+    model: env.OPENAI_MODEL,
+    instructions: `
+You are CareerTrack AI's professional career assistant.
+
+Help the user with job applications, interview preparation, resumes,
+cover letters, follow-up messages, career planning, and job-description
+questions.
+
+Use only the information supplied by the user.
+Do not invent work experience, education, certifications, employers,
+skills, accomplishments, salary data, or facts about a company.
+
+Give practical, clear, and concise guidance.
+Use headings and short lists when they improve readability.
+`,
+    input: `
+USER QUESTION:
+${data.message}
+
+OPTIONAL COMPANY:
+${data.company || "Not supplied"}
+
+OPTIONAL ROLE:
+${data.role || "Not supplied"}
+
+OPTIONAL JOB DESCRIPTION:
+${data.jobDescription || "Not supplied"}
+
+OPTIONAL RESUME:
+${data.resumeText || "Not supplied"}
+`
+  });
+
+  res.json({
+    reply: response.output_text
+  });
+});

@@ -12,6 +12,10 @@ import DashboardFilters from "./components/DashboardFilters";
 import GoalTracker from "./components/GoalTracker";
 import InterviewCoach from "./components/InterviewCoach";
 import MockInterview from "./components/MockInterview";
+import JobImporter from "./components/JobImporter";
+import ThemeToggle from "./components/ThemeToggle";
+import AppSidebar from "./components/AppSidebar";
+import CareerAssistant from "./components/CareerAssistant";
 
 import type {
   Interview,
@@ -89,6 +93,13 @@ export default function App() {
   company: "",
   location: ""
 });
+
+function scrollToSection(sectionId: string) {
+  document.getElementById(sectionId)?.scrollIntoView({
+    behavior: "smooth",
+    block: "start"
+  });
+}
 
   async function loadApplications() {
     try {
@@ -479,6 +490,9 @@ const dashboardApplications = useMemo(() => {
   }
 
   return (
+    <div className="app-layout">
+    <AppSidebar onNavigate={scrollToSection} />
+
     <main className="page-shell">
       <header className="topbar">
         <div>
@@ -490,16 +504,20 @@ const dashboardApplications = useMemo(() => {
           </p>
         </div>
 
-        <button
-          className="secondary"
-          type="button"
-          onClick={() => {
-            clearToken();
-            setAuthenticated(false);
-          }}
-        >
-          Log out
-        </button>
+      <div className="topbar-actions">
+  <ThemeToggle />
+
+  <button
+    className="secondary"
+    type="button"
+    onClick={() => {
+      clearToken();
+      setAuthenticated(false);
+    }}
+  >
+    Log out
+  </button>
+</div>  
       </header>
 
       {error && <div className="alert">{error}</div>}
@@ -533,6 +551,37 @@ const dashboardApplications = useMemo(() => {
   offers={dashboardTotals.offers}
 />
 
+<JobImporter
+  onImported={(job) => {
+    setForm({
+      company: job.company,
+      role: job.role,
+      location: job.location,
+      jobUrl: job.jobUrl,
+      status: "SAVED",
+      jobDescription: job.jobDescription,
+      notes: [
+        job.salary ? `Salary: ${job.salary}` : "",
+        job.notes
+      ]
+        .filter(Boolean)
+        .join("\n\n")
+    });
+
+    window.scrollTo({
+      top: 0,
+      behavior: "smooth"
+    });
+  }}
+/>
+
+<div id="career-assistant">
+  <CareerAssistant
+    applications={applications}
+    resumeVersions={resumeVersions}
+  />
+</div>
+
       <section className="content-grid">
         <ApplicationTracker
           form={form}
@@ -555,47 +604,53 @@ const dashboardApplications = useMemo(() => {
         />
       </section>
 
-      <ResumeAnalyzer
-        resumeText={resumeText}
-        analysis={resumeAnalysis}
-        loading={loading}
-        onResumeTextChange={setResumeText}
-        onAnalyze={analyzeResume}
-      />
+            <div id="resume-tools">
+        <ResumeAnalyzer
+          resumeText={resumeText}
+          analysis={resumeAnalysis}
+          loading={loading}
+          onResumeTextChange={setResumeText}
+          onAnalyze={analyzeResume}
+        />
 
-      <InterviewTracker
-        applications={applications}
-        interviews={interviews}
-        form={interviewForm}
-        loading={loading}
-        onFormChange={setInterviewForm}
-        onSubmit={addInterview}
-        onDelete={removeInterview}
-      />
+        <ResumeVersionManager
+          resumes={resumeVersions}
+          form={resumeVersionForm}
+          loading={loading}
+          onFormChange={setResumeVersionForm}
+          onSubmit={saveResumeVersion}
+          onEdit={editResumeVersion}
+          onDuplicate={duplicateResumeVersion}
+          onAnalyze={analyzeSavedResume}
+          onMakeDefault={makeDefaultResume}
+          onDelete={removeResumeVersion}
+          onCancelEdit={() =>
+            setResumeVersionForm(emptyResumeVersionForm)
+          }
+        />
+      </div>
 
-      <InterviewCoach
-        applications={applications}
-        resumeVersions={resumeVersions}
-      />
+      <div id="interviews">
+        <InterviewTracker
+          applications={applications}
+          interviews={interviews}
+          form={interviewForm}
+          loading={loading}
+          onFormChange={setInterviewForm}
+          onSubmit={addInterview}
+          onDelete={removeInterview}
+        />
 
-      <MockInterview applications={applications} />
+        <InterviewCoach
+          applications={applications}
+          resumeVersions={resumeVersions}
+        />
+      </div>
 
-      <ResumeVersionManager
-        resumes={resumeVersions}
-        form={resumeVersionForm}
-        loading={loading}
-        onFormChange={setResumeVersionForm}
-        onSubmit={saveResumeVersion}
-        onEdit={editResumeVersion}
-        onDuplicate={duplicateResumeVersion}
-        onAnalyze={analyzeSavedResume}
-        onMakeDefault={makeDefaultResume}
-        onDelete={removeResumeVersion}
-        onCancelEdit={() =>
-          setResumeVersionForm(emptyResumeVersionForm)
-        }
-      />
+      <div id="mock-interviews">
+        <MockInterview applications={applications} />
+      </div>
     </main>
+  </div>
   );
 }
-

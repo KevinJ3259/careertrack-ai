@@ -9,6 +9,7 @@ import { errorHandler } from "./middleware/error.js";
 import { interviewsRouter } from "./routes/interviews.js";
 import { resumesRouter } from "./routes/resumes.js";
 import { mockInterviewsRouter } from "./routes/mockInterviews.js";
+import { jobImportRouter } from "./routes/jobImport.js";
 
 const app = express();
 
@@ -19,10 +20,13 @@ app.get("/api/health", (_req, res) => {
   res.json({ status: "ok" });
 });
 
+app.use("/api/auth", authRouter);
+app.use("/api/applications", applicationsRouter);
 app.use("/api/ai", aiRouter);
 app.use("/api/interviews", interviewsRouter);
 app.use("/api/resumes", resumesRouter);
 app.use("/api/mock-interviews", mockInterviewsRouter);
+app.use("/api/job-import", jobImportRouter);
 
 app.use(errorHandler);
 

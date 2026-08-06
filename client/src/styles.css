@@ -1,4 +1,89 @@
 :root {
+  color-scheme: light;
+
+  --bg: #f4f7fb;
+  --surface: #ffffff;
+  --surface-alt: #f8fafc;
+  --surface-soft: #eef3f8;
+
+  --text: #172033;
+  --text-muted: #667085;
+
+  --border: #dfe5ec;
+
+  --primary: #2563eb;
+  --primary-hover: #1d4ed8;
+  --primary-soft: #eaf1ff;
+
+  --danger: #dc2626;
+  --danger-soft: #feecec;
+
+  --shadow: 0 10px 30px rgba(15, 23, 42, 0.08);
+}
+
+[data-theme="dark"] {
+  color-scheme: dark;
+
+  --bg: #0b1220;
+  --surface: #111827;
+  --surface-alt: #182235;
+  --surface-soft: #202b3d;
+
+  --text: #f3f4f6;
+  --text-muted: #a9b4c6;
+
+  --border: #2a374a;
+
+  --primary: #60a5fa;
+  --primary-hover: #93c5fd;
+  --primary-soft: #17294a;
+
+  --danger: #f87171;
+  --danger-soft: #3a1f27;
+
+  --shadow: 0 12px 34px rgba(0, 0, 0, 0.35);
+}
+
+html {
+  background: var(--bg);
+}
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  transition:
+    background-color 0.2s ease,
+    color 0.2s ease;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+button,
+input,
+select,
+textarea,
+.panel,
+.alert,
+.dashboard-metric,
+.analytics-metric,
+.analytics-chart-card,
+.coach-section,
+.mock-feedback-card,
+.saved-mock-card,
+.resume-version-card,
+.interview-card,
+.job-import-grid article {
+  transition:
+    background-color 0.2s ease,
+    border-color 0.2s ease,
+    color 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+:root {
   font-family:
     Inter,
     ui-sans-serif,
@@ -680,5 +765,456 @@ textarea {
 @media (max-width: 650px) {
   .mock-progress-filters {
     grid-template-columns: 1fr;
+  }
+}
+
+/* ===========================
+   JOB IMPORTER
+=========================== */
+
+.job-importer {
+  margin-bottom: 2rem;
+}
+
+.job-importer-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
+.job-importer-form label {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  font-weight: 600;
+}
+
+.job-importer-form input,
+.job-importer-form textarea {
+  width: 100%;
+  padding: 0.85rem;
+  border: 1px solid #d6dbe2;
+  border-radius: 10px;
+  font-size: 0.95rem;
+  font-family: inherit;
+}
+
+.job-importer-form textarea {
+  resize: vertical;
+  min-height: 220px;
+}
+
+.helper-text {
+  color: #666;
+  margin-top: 0.5rem;
+}
+
+.job-import-preview {
+  margin-top: 2rem;
+  border-top: 1px solid #ececec;
+  padding-top: 1.5rem;
+}
+
+.job-import-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 1rem;
+  margin: 1.25rem 0;
+}
+
+.job-import-grid article {
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  padding: 1rem;
+}
+
+.job-import-grid span {
+  display: block;
+  font-size: 0.8rem;
+  color: #666;
+  margin-bottom: 0.35rem;
+}
+
+.job-import-grid strong {
+  font-size: 0.95rem;
+  color: #111827;
+}
+
+.job-import-notes {
+  margin-top: 1rem;
+  padding: 1rem;
+  background: #f8fafc;
+  border-left: 4px solid #2563eb;
+  border-radius: 10px;
+}
+
+.button-row {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+  margin-top: 1.5rem;
+}
+
+.secondary-link {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.75rem 1rem;
+  border: 1px solid #2563eb;
+  border-radius: 10px;
+  color: #2563eb;
+  text-decoration: none;
+  font-weight: 600;
+}
+
+.secondary-link:hover {
+  background: #2563eb;
+  color: white;
+}
+
+.page-shell {
+  background: var(--bg);
+  color: var(--text);
+}
+
+.topbar,
+.panel,
+.dashboard-metric,
+.analytics-metric,
+.analytics-chart-card,
+.coach-section,
+.mock-feedback-card,
+.saved-mock-card,
+.resume-version-card,
+.interview-card,
+.job-import-grid article,
+.mock-progress-chart {
+  background: var(--surface);
+  color: var(--text);
+  border-color: var(--border);
+  box-shadow: var(--shadow);
+}
+
+.topbar-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}
+
+.theme-toggle {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.45rem;
+  min-height: 42px;
+  padding: 0.7rem 0.95rem;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  background: var(--surface-alt);
+  color: var(--text);
+  cursor: pointer;
+  font-weight: 700;
+}
+
+.theme-toggle:hover {
+  border-color: var(--primary);
+  background: var(--primary-soft);
+}
+
+input,
+select,
+textarea {
+  background: var(--surface-alt);
+  color: var(--text);
+  border-color: var(--border);
+}
+
+input::placeholder,
+textarea::placeholder {
+  color: var(--text-muted);
+}
+
+label,
+.helper-text,
+.dashboard-chart-heading p,
+.analytics-chart-heading p,
+.interview-coach-selection span,
+.mock-score-grid span,
+.dashboard-metric span,
+.analytics-metric span,
+.job-import-grid span {
+  color: var(--text-muted);
+}
+
+button {
+  background: var(--primary);
+  color: #ffffff;
+}
+
+button:hover:not(:disabled) {
+  background: var(--primary-hover);
+}
+
+button.secondary,
+.secondary-link {
+  background: var(--surface-alt);
+  color: var(--text);
+  border-color: var(--border);
+}
+
+button.secondary:hover,
+.secondary-link:hover {
+  background: var(--primary-soft);
+  color: var(--primary);
+  border-color: var(--primary);
+}
+
+.alert {
+  background: var(--danger-soft);
+  color: var(--danger);
+  border-color: var(--danger);
+}
+
+.empty-state,
+.interview-coach-selection,
+.coach-question summary,
+.star-grid > div,
+.job-import-notes {
+  background: var(--surface-alt);
+  color: var(--text);
+  border-color: var(--border);
+}
+
+.coach-tags span {
+  background: var(--primary-soft);
+  color: var(--primary);
+}
+
+.danger-link {
+  color: var(--danger);
+}
+
+[data-theme="dark"] .recharts-cartesian-grid line {
+  stroke: #334155;
+}
+
+[data-theme="dark"] .recharts-text {
+  fill: var(--text-muted);
+}
+
+[data-theme="dark"] .recharts-default-tooltip {
+  background: var(--surface) !important;
+  border-color: var(--border) !important;
+  color: var(--text) !important;
+}
+
+@media (max-width: 700px) {
+  .topbar {
+    align-items: flex-start;
+    gap: 1rem;
+  }
+
+  .topbar-actions {
+    width: 100%;
+  }
+
+  .theme-toggle,
+  .topbar-actions .secondary {
+    flex: 1;
+  }
+}
+
+.app-layout {
+  display: grid;
+  grid-template-columns: 260px minmax(0, 1fr);
+  min-height: 100vh;
+  background: var(--bg);
+}
+
+.app-sidebar {
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  padding: 1.25rem;
+  border-right: 1px solid var(--border);
+  background: var(--surface);
+}
+
+.app-sidebar-brand {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+  margin-bottom: 2rem;
+}
+
+.app-sidebar-brand > div {
+  display: grid;
+  gap: 0.15rem;
+}
+
+.app-sidebar-brand small {
+  color: var(--text-muted);
+}
+
+.app-sidebar-logo {
+  display: grid;
+  width: 42px;
+  height: 42px;
+  place-items: center;
+  border-radius: 12px;
+  background: var(--primary);
+  color: #ffffff;
+  font-weight: 800;
+}
+
+.app-sidebar-nav {
+  display: grid;
+  gap: 0.45rem;
+}
+
+.app-sidebar-nav button {
+  width: 100%;
+  justify-content: flex-start;
+  padding: 0.8rem 0.9rem;
+  border: 1px solid transparent;
+  background: transparent;
+  color: var(--text-muted);
+  text-align: left;
+}
+
+.app-sidebar-nav button:hover {
+  border-color: var(--border);
+  background: var(--surface-alt);
+  color: var(--text);
+}
+
+.page-shell {
+  min-width: 0;
+  width: 100%;
+  padding: 1.5rem;
+}
+
+#dashboard,
+#job-importer,
+#career-assistant,
+#applications,
+#resume-tools,
+#interviews,
+#mock-interviews {
+  scroll-margin-top: 1rem;
+}
+
+@media (max-width: 950px) {
+  .app-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .app-sidebar {
+    position: static;
+    height: auto;
+    border-right: 0;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .app-sidebar-nav {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 650px) {
+  .app-sidebar-nav {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .page-shell {
+    padding: 1rem;
+  }
+}
+
+/* ===========================
+   CAREER ASSISTANT
+=========================== */
+
+.career-assistant {
+  margin-top: 1.5rem;
+}
+
+.career-assistant-context {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.career-assistant-chat {
+  display: grid;
+  gap: 0.9rem;
+  max-height: 520px;
+  overflow-y: auto;
+  padding: 1rem;
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  background: var(--surface-alt);
+}
+
+.career-message {
+  max-width: 82%;
+  padding: 0.9rem 1rem;
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  background: var(--surface);
+  color: var(--text);
+  white-space: pre-wrap;
+}
+
+.career-message span {
+  display: block;
+  margin-bottom: 0.35rem;
+  color: var(--text-muted);
+  font-size: 0.8rem;
+  font-weight: 700;
+}
+
+.career-message p {
+  margin: 0;
+  line-height: 1.55;
+}
+
+.career-message-user {
+  justify-self: end;
+  background: var(--primary);
+  color: #ffffff;
+  border-color: var(--primary);
+}
+
+.career-message-user span {
+  color: rgba(255, 255, 255, 0.8);
+}
+
+.career-message-assistant {
+  justify-self: start;
+}
+
+.career-assistant-form {
+  display: grid;
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
+.career-assistant-form textarea {
+  min-height: 120px;
+  resize: vertical;
+}
+
+@media (max-width: 750px) {
+  .career-assistant-context {
+    grid-template-columns: 1fr;
+  }
+
+  .career-message {
+    max-width: 95%;
   }
 }

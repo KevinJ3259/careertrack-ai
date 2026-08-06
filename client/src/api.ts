@@ -1,11 +1,13 @@
 import type { 
+  CareerAssistantResponse,
   Interview,
-  InterviewCoachPlan, 
+  InterviewCoachPlan,
   JobApplication,
   MockInterviewFeedback,
+  ParsedJobImport,
   ResumeVersion,
-  SavedMockInterviewResult, 
-  Status 
+  SavedMockInterviewResult,
+  Status
 } from "./types";
 
 const API_URL = import.meta.env.VITE_API_URL ?? "http://localhost:4000/api";
@@ -212,5 +214,26 @@ saveMockInterviewResult: (body: {
 deleteMockInterviewResult: (id: string) =>
   request<void>(`/mock-interviews/${id}`, {
     method: "DELETE"
+  }),
+
+parseJobPosting: (body: {
+  jobUrl?: string;
+  postingText: string;
+}) =>
+  request<ParsedJobImport>("/job-import/parse", {
+    method: "POST",
+    body: JSON.stringify(body)
+  }),
+
+sendCareerAssistantMessage: (body: {
+  message: string;
+  company?: string;
+  role?: string;
+  jobDescription?: string;
+  resumeText?: string;
+}) =>
+  request<CareerAssistantResponse>("/ai/career-assistant", {
+    method: "POST",
+    body: JSON.stringify(body)
   })
 };

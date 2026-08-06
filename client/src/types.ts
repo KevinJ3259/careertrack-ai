@@ -87,3 +87,17 @@ export type SavedMockInterviewResult = MockInterviewFeedback & {
   createdAt: string;
   updatedAt: string;
 };
+
+export type ParsedJobImport = {
+  company: string;
+  role: string;
+  location: string;
+  salary: string;
+  jobUrl: string;
+  jobDescription: string;
+  notes: string;
+};
+
+export type CareerAssistantResponse = {
+  reply: string;
+};
