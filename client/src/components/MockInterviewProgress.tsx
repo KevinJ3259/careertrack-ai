@@ -128,58 +128,66 @@ const chartData = useMemo(
   </label>
 </div>
 
-      <div className="mock-progress-chart">
-        <ResponsiveContainer width="100%" height={320}>
-          <LineChart
-            data={chartData}
-            margin={{ top: 10, right: 20, left: 0, bottom: 10 }}
-          >
-            <CartesianGrid strokeDasharray="3 3" vertical={false} />
-            <XAxis dataKey="attempt" />
-            <YAxis domain={[0, 100]} allowDecimals={false} />
-            <Tooltip
-              labelFormatter={(value, payload) => {
-                const date = payload?.[0]?.payload?.date;
-                return date ? `${value} — ${date}` : value;
-              }}
-            />
-            <Legend />
+{chartData.length === 0 ? (
+  <div className="empty-state">
+    No mock interview results match the selected filters.
+  </div>
+) : (
+  <div className="mock-progress-chart">
+    <ResponsiveContainer width="100%" height={320}>
+      <LineChart
+        data={chartData}
+        margin={{ top: 10, right: 20, left: 0, bottom: 10 }}
+      >
+        <CartesianGrid strokeDasharray="3 3" vertical={false} />
+        <XAxis dataKey="attempt" />
+        <YAxis domain={[0, 100]} allowDecimals={false} />
 
-            <Line
-              type="monotone"
-              dataKey="overall"
-              name="Overall"
-              stroke="#2563eb"
-              strokeWidth={3}
-              activeDot={{ r: 6 }}
-            />
+        <Tooltip
+          labelFormatter={(value, payload) => {
+            const date = payload?.[0]?.payload?.date;
+            return date ? `${value} — ${date}` : value;
+          }}
+        />
 
-            <Line
-              type="monotone"
-              dataKey="relevance"
-              name="Relevance"
-              stroke="#7c3aed"
-              strokeWidth={2}
-            />
+        <Legend />
 
-            <Line
-              type="monotone"
-              dataKey="clarity"
-              name="Clarity"
-              stroke="#f59e0b"
-              strokeWidth={2}
-            />
+        <Line
+          type="monotone"
+          dataKey="overall"
+          name="Overall"
+          stroke="#2563eb"
+          strokeWidth={3}
+          activeDot={{ r: 6 }}
+        />
 
-            <Line
-              type="monotone"
-              dataKey="structure"
-              name="Structure"
-              stroke="#16a34a"
-              strokeWidth={2}
-            />
-          </LineChart>
-        </ResponsiveContainer>
-      </div>
+        <Line
+          type="monotone"
+          dataKey="relevance"
+          name="Relevance"
+          stroke="#7c3aed"
+          strokeWidth={2}
+        />
+
+        <Line
+          type="monotone"
+          dataKey="clarity"
+          name="Clarity"
+          stroke="#f59e0b"
+          strokeWidth={2}
+        />
+
+        <Line
+          type="monotone"
+          dataKey="structure"
+          name="Structure"
+          stroke="#16a34a"
+          strokeWidth={2}
+        />
+      </LineChart>
+    </ResponsiveContainer>
+  </div>
+)}
     </section>
   );
 }
