@@ -23,6 +23,7 @@ model User {
   applications         JobApplication[]
   resumeVersions       ResumeVersion[]
   mockInterviewResults MockInterviewResult[]
+  reminders            Reminder[]
   createdAt            DateTime              @default(now())
   updatedAt            DateTime              @updatedAt
 }
@@ -44,6 +45,7 @@ model JobApplication {
   updatedAt      DateTime          @updatedAt
 
   interviews Interview[]
+  reminders  Reminder[]
 
   @@index([userId, status])
 }
@@ -110,4 +112,29 @@ model MockInterviewResult {
 
   @@index([userId])
   @@index([createdAt])
+}
+
+model Reminder {
+  id             String    @id @default(cuid())
+  reminderType   String
+  title          String
+  message        String?
+  recipientEmail String?
+  dueAt          DateTime
+  sentAt         DateTime?
+  isSent         Boolean   @default(false)
+
+  applicationId String?
+  application   JobApplication? @relation(fields: [applicationId], references: [id], onDelete: Cascade)
+
+  userId String
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([userId])
+  @@index([applicationId])
+  @@index([dueAt])
+  @@index([isSent, dueAt])
 }

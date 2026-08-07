@@ -6,6 +6,7 @@ const sections = [
   { id: "dashboard", label: "Dashboard" },
   { id: "job-importer", label: "Job Importer" },
   { id: "career-assistant", label: "Career Assistant" },
+  { id: "reminders", label: "Reminders" },
   { id: "applications", label: "Applications" },
   { id: "resume-tools", label: "Resume Tools" },
   { id: "interviews", label: "Interviews" },

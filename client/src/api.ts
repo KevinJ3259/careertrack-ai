@@ -5,6 +5,8 @@ import type {
   JobApplication,
   MockInterviewFeedback,
   ParsedJobImport,
+  Reminder,
+  ReminderType,
   ResumeVersion,
   SavedMockInterviewResult,
   Status
@@ -235,5 +237,43 @@ sendCareerAssistantMessage: (body: {
   request<CareerAssistantResponse>("/ai/career-assistant", {
     method: "POST",
     body: JSON.stringify(body)
+  }),
+
+  listReminders: () =>
+  request<Reminder[]>("/reminders"),
+
+createReminder: (body: {
+  reminderType: ReminderType;
+  title: string;
+  message?: string;
+  recipientEmail?: string;
+  dueAt: string;
+  applicationId?: string;
+}) =>
+  request<Reminder>("/reminders", {
+    method: "POST",
+    body: JSON.stringify(body)
+  }),
+
+updateReminder: (
+  id: string,
+  body: Partial<{
+    reminderType: ReminderType;
+    title: string;
+    message: string;
+    recipientEmail: string;
+    dueAt: string;
+    applicationId: string;
+    isSent: boolean;
+  }>
+) =>
+  request<Reminder>(`/reminders/${id}`, {
+    method: "PATCH",
+    body: JSON.stringify(body)
+  }),
+
+deleteReminder: (id: string) =>
+  request<void>(`/reminders/${id}`, {
+    method: "DELETE"
   })
 };

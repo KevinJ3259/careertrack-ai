@@ -10,6 +10,9 @@ import { interviewsRouter } from "./routes/interviews.js";
 import { resumesRouter } from "./routes/resumes.js";
 import { mockInterviewsRouter } from "./routes/mockInterviews.js";
 import { jobImportRouter } from "./routes/jobImport.js";
+import { remindersRouter } from "./routes/reminders.js";
+import { verifyEmailConnection } from "./services/email.js";
+import { startReminderScheduler } from "./services/reminderScheduler.js";
 
 const app = express();
 
@@ -27,11 +30,21 @@ app.use("/api/interviews", interviewsRouter);
 app.use("/api/resumes", resumesRouter);
 app.use("/api/mock-interviews", mockInterviewsRouter);
 app.use("/api/job-import", jobImportRouter);
+app.use("/api/reminders", remindersRouter);
 
 app.use(errorHandler);
 
-const server = app.listen(env.PORT, () => {
+const server = app.listen(env.PORT, async () => {
   console.log(`API running at http://localhost:${env.PORT}`);
+
+  try {
+    await verifyEmailConnection();
+    console.log("Email server connection verified.");
+
+    startReminderScheduler();
+  } catch (error) {
+    console.error("Email server connection failed:", error);
+  }
 });
 
 async function shutdown() {

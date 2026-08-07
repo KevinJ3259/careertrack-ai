@@ -1100,6 +1100,7 @@ button.secondary:hover,
 #dashboard,
 #job-importer,
 #career-assistant,
+#reminders,
 #applications,
 #resume-tools,
 #interviews,
@@ -1216,5 +1217,119 @@ button.secondary:hover,
 
   .career-message {
     max-width: 95%;
+  }
+}
+
+/* ===========================
+   REMINDER MANAGER
+=========================== */
+
+.reminder-manager {
+  margin-top: 1.5rem;
+}
+
+.reminder-layout {
+  display: grid;
+  grid-template-columns: minmax(280px, 0.8fr) minmax(0, 1.2fr);
+  gap: 1.5rem;
+  align-items: start;
+}
+
+.reminder-form {
+  display: grid;
+  gap: 1rem;
+  padding: 1rem;
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  background: var(--surface-alt);
+}
+
+.reminder-form label {
+  display: grid;
+  gap: 0.45rem;
+  color: var(--text-muted);
+  font-weight: 700;
+}
+
+.reminder-lists {
+  display: grid;
+  gap: 1.5rem;
+}
+
+.reminder-list {
+  display: grid;
+  gap: 1rem;
+}
+
+.reminder-card {
+  padding: 1rem;
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  background: var(--surface);
+  color: var(--text);
+  box-shadow: var(--shadow);
+}
+
+.reminder-card-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.reminder-card-header h3 {
+  margin: 0.25rem 0 0;
+}
+
+.reminder-card p {
+  margin: 0.55rem 0;
+  color: var(--text-muted);
+  line-height: 1.5;
+}
+
+.reminder-message {
+  padding: 0.8rem;
+  border-left: 4px solid var(--primary);
+  border-radius: 8px;
+  background: var(--surface-alt);
+  color: var(--text) !important;
+  white-space: pre-wrap;
+}
+
+.status-pending,
+.status-complete {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.35rem 0.65rem;
+  border-radius: 999px;
+  font-size: 0.8rem;
+  font-weight: 800;
+  white-space: nowrap;
+}
+
+.status-pending {
+  background: var(--primary-soft);
+  color: var(--primary);
+}
+
+.status-complete {
+  background: #dcfce7;
+  color: #166534;
+}
+
+[data-theme="dark"] .status-complete {
+  background: #143322;
+  color: #86efac;
+}
+
+@media (max-width: 900px) {
+  .reminder-layout {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 600px) {
+  .reminder-card-header {
+    flex-direction: column;
   }
 }

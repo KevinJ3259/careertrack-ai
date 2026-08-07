@@ -101,3 +101,29 @@ export type ParsedJobImport = {
 export type CareerAssistantResponse = {
   reply: string;
 };
+
+export type ReminderType =
+  | "APPLICATION_FOLLOW_UP"
+  | "INTERVIEW_REMINDER"
+  | "THANK_YOU_EMAIL"
+  | "STATUS_CHECK"
+  | "CUSTOM";
+
+export type Reminder = {
+  id: string;
+  reminderType: ReminderType;
+  title: string;
+  message: string | null;
+  recipientEmail: string | null;
+  dueAt: string;
+  sentAt: string | null;
+  isSent: boolean;
+  applicationId: string | null;
+  application: {
+    id: string;
+    company: string;
+    role: string;
+  } | null;
+  createdAt: string;
+  updatedAt: string;
+};

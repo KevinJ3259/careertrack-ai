@@ -16,10 +16,13 @@ import JobImporter from "./components/JobImporter";
 import ThemeToggle from "./components/ThemeToggle";
 import AppSidebar from "./components/AppSidebar";
 import CareerAssistant from "./components/CareerAssistant";
+import ReminderManager from "./components/ReminderManager";
+import UpcomingReminders from "./components/UpcomingReminders";
 
 import type {
   Interview,
   JobApplication,
+  Reminder,
   ResumeVersion,
   Status
 } from "./types";
@@ -66,6 +69,7 @@ export default function App() {
   const [applications, setApplications] = useState<JobApplication[]>([]);
   const [interviews, setInterviews] = useState<Interview[]>([]);
   const [resumeVersions, setResumeVersions] = useState<ResumeVersion[]>([]);
+  const [reminders, setReminders] = useState<Reminder[]>([]);
 
   const [form, setForm] = useState(emptyForm);
   const [interviewForm, setInterviewForm] = useState(emptyInterviewForm);
@@ -133,12 +137,23 @@ function scrollToSection(sectionId: string) {
     }
   }
 
+  async function loadReminders() {
+  try {
+    setReminders(await api.listReminders());
+  } catch (err) {
+    setError(
+      err instanceof Error ? err.message : "Unable to load reminders."
+    );
+  }
+}
+
   useEffect(() => {
     if (authenticated) {
       setError("");
       void loadApplications();
       void loadInterviews();
       void loadResumeVersions();
+      void loadReminders();
     }
   }, [authenticated]);
 
@@ -551,6 +566,8 @@ const dashboardApplications = useMemo(() => {
   offers={dashboardTotals.offers}
 />
 
+<UpcomingReminders reminders={reminders} />
+
 <JobImporter
   onImported={(job) => {
     setForm({
@@ -580,6 +597,13 @@ const dashboardApplications = useMemo(() => {
     applications={applications}
     resumeVersions={resumeVersions}
   />
+</div>
+
+<div id="reminders">
+  <ReminderManager
+  applications={applications}
+  onRemindersChanged={loadReminders}
+/>
 </div>
 
       <section className="content-grid">
