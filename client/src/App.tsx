@@ -18,6 +18,8 @@ import AppSidebar from "./components/AppSidebar";
 import CareerAssistant from "./components/CareerAssistant";
 import ReminderManager from "./components/ReminderManager";
 import UpcomingReminders from "./components/UpcomingReminders";
+import ApplicationKanban from "./components/ApplicationKanban";
+import ResumeOptimizer from "./components/ResumeOptimizer";
 
 import type {
   Interview,
@@ -606,6 +608,14 @@ const dashboardApplications = useMemo(() => {
 />
 </div>
 
+<div id="kanban">
+  <ApplicationKanban
+    applications={applications}
+    statuses={statuses}
+    onStatusChange={updateStatus}
+  />
+</div>
+
       <section className="content-grid">
         <ApplicationTracker
           form={form}
@@ -636,6 +646,10 @@ const dashboardApplications = useMemo(() => {
           onResumeTextChange={setResumeText}
           onAnalyze={analyzeResume}
         />
+
+         <div id="resume-optimizer">
+          <ResumeOptimizer />
+        </div>
 
         <ResumeVersionManager
           resumes={resumeVersions}

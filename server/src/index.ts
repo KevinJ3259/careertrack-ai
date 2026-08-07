@@ -13,6 +13,7 @@ import { jobImportRouter } from "./routes/jobImport.js";
 import { remindersRouter } from "./routes/reminders.js";
 import { verifyEmailConnection } from "./services/email.js";
 import { startReminderScheduler } from "./services/reminderScheduler.js";
+import { aiResumeOptimizerRouter } from "./routes/aiResumeOptimizer.js";
 
 const app = express();
 
@@ -31,7 +32,7 @@ app.use("/api/resumes", resumesRouter);
 app.use("/api/mock-interviews", mockInterviewsRouter);
 app.use("/api/job-import", jobImportRouter);
 app.use("/api/reminders", remindersRouter);
-
+app.use("/api/ai-resume-optimizer", aiResumeOptimizerRouter);
 app.use(errorHandler);
 
 const server = app.listen(env.PORT, async () => {

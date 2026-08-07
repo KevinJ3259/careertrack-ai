@@ -1,4 +1,4 @@
-import type { 
+import type {
   CareerAssistantResponse,
   Interview,
   InterviewCoachPlan,
@@ -7,6 +7,7 @@ import type {
   ParsedJobImport,
   Reminder,
   ReminderType,
+  ResumeOptimizerResult,
   ResumeVersion,
   SavedMockInterviewResult,
   Status
@@ -275,5 +276,14 @@ updateReminder: (
 deleteReminder: (id: string) =>
   request<void>(`/reminders/${id}`, {
     method: "DELETE"
+  }),
+
+optimizeResume: (body: {
+  resumeText: string;
+  jobDescription: string;
+}) =>
+  request<ResumeOptimizerResult>("/ai/resume-optimizer", {
+    method: "POST",
+    body: JSON.stringify(body)
   })
 };

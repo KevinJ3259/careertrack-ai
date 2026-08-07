@@ -9,6 +9,9 @@ const sections = [
   { id: "reminders", label: "Reminders" },
   { id: "applications", label: "Applications" },
   { id: "resume-tools", label: "Resume Tools" },
+
+  { id: "resume-optimizer", label: "Resume Optimizer" },
+
   { id: "interviews", label: "Interviews" },
   { id: "mock-interviews", label: "Mock Interviews" }
 ];

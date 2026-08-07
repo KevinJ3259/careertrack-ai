@@ -127,3 +127,12 @@ export type Reminder = {
   createdAt: string;
   updatedAt: string;
 };
+
+export type ResumeOptimizerResult = {
+  overallMatch: number;
+  missingKeywords: string[];
+  improvements: string[];
+  optimizedSummary: string;
+  optimizedExperience: string[];
+  optimizedSkills: string[];
+};
