@@ -11,7 +11,7 @@ import AnalyticsDashboard from "./components/AnalyticsDashboard";
 import DashboardFilters from "./components/DashboardFilters";
 import GoalTracker from "./components/GoalTracker";
 import InterviewCoach from "./components/InterviewCoach";
-import MockInterview from "./components/Mockinterview";
+import MockInterview from "./components/MockInterview";
 import JobImporter from "./components/JobImporter";
 import ThemeToggle from "./components/ThemeToggle";
 import AppSidebar from "./components/AppSidebar";
