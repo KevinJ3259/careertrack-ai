@@ -1,5 +1,6 @@
 import { FormEvent, useState } from "react";
 import { api, setToken } from "../api";
+import logo from "../assets/careertrack-logo.png";
 
 export default function AuthScreen({
   onAuthenticated
@@ -32,18 +33,30 @@ export default function AuthScreen({
   return (
     <main className="auth-shell">
       <section className="auth-copy">
-        <p className="eyebrow">FULL-STACK PORTFOLIO STARTER</p>
-        <h1>Turn your job search into a project employers can explore.</h1>
+        <p className="eyebrow">AI-POWERED CAREER PLATFORM</p>
+        <h1>
+Organize your job search. Optimize your resume. Land your next opportunity.
+</h1>
         <p>
-          Demonstrate React, TypeScript, REST APIs, authentication, PostgreSQL,
-          Prisma, AI integration, responsive design, and deployment.
-        </p>
+Track applications, optimize resumes with AI, prepare for interviews,
+manage follow-ups, and accelerate your career with one intelligent platform.
+</p>
       </section>
 
       <form className="auth-card" onSubmit={submit}>
+  <div className="auth-logo-wrap">
+    <img
+      src={logo}
+      alt="CareerTrack AI"
+      className="auth-logo"
+    />
+  </div>
+  
         <h2>
-          {mode === "register" ? "Create your account" : "Welcome back"}
-        </h2>
+  {mode === "register"
+    ? "Welcome to CareerTrack AI"
+    : "Welcome Back"}
+</h2>
 
         {error && <div className="alert">{error}</div>}
 
@@ -80,8 +93,8 @@ export default function AuthScreen({
         </label>
 
         <button type="submit">
-          {mode === "register" ? "Register" : "Log in"}
-        </button>
+  {mode === "register" ? "Create Account" : "Log in"}
+</button>
 
         <button
           className="text-button"

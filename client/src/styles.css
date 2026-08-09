@@ -1441,3 +1441,243 @@ button.secondary:hover,
   opacity: 0.5;
   transform: scale(0.98);
 }
+
+.auth-logo-wrap {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.auth-logo {
+  width: 220px;
+  max-width: 100%;
+  height: auto;
+  display: block;
+  margin: 0 auto;
+  border-radius: 12px;
+}
+
+.dashboard-kpis {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 1rem;
+  margin: 1.5rem 0;
+}
+
+.kpi-card {
+  padding: 1.25rem;
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  background: var(--surface);
+  box-shadow: var(--shadow);
+}
+
+.kpi-card p {
+  margin: 0;
+  color: var(--text-muted);
+  font-size: 0.9rem;
+  font-weight: 700;
+}
+
+.kpi-card strong {
+  display: block;
+  margin: 0.4rem 0;
+  color: var(--text);
+  font-size: 2rem;
+  line-height: 1;
+}
+
+.kpi-card span {
+  color: var(--text-muted);
+  font-size: 0.82rem;
+}
+
+@media (max-width: 900px) {
+  .dashboard-kpis {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 520px) {
+  .dashboard-kpis {
+    grid-template-columns: 1fr;
+  }
+}
+
+.dashboard-recommendations {
+  margin-bottom: 1.5rem;
+}
+
+.recommendation-list {
+  display: grid;
+  gap: 0.8rem;
+}
+
+.recommendation-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.8rem;
+  padding: 0.9rem 1rem;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  background: var(--surface-alt);
+}
+
+.recommendation-item p {
+  margin: 0;
+  color: var(--text);
+  line-height: 1.5;
+}
+
+.recommendation-icon {
+  display: inline-flex;
+  width: 26px;
+  height: 26px;
+  flex: 0 0 26px;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background: var(--primary-soft);
+  color: var(--primary);
+  font-weight: 800;
+}
+
+.recent-activity {
+  margin-bottom: 1.5rem;
+}
+
+.activity-list {
+  display: grid;
+}
+
+.activity-item {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  gap: 0.9rem;
+  padding: 0.9rem 0;
+  border-bottom: 1px solid var(--border);
+}
+
+.activity-item:last-child {
+  border-bottom: 0;
+}
+
+.activity-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--primary);
+}
+
+.activity-content strong {
+  color: var(--text);
+}
+
+.activity-content p {
+  margin: 0.25rem 0 0;
+  color: var(--text-muted);
+  font-size: 0.9rem;
+}
+
+.activity-item time {
+  color: var(--text-muted);
+  font-size: 0.82rem;
+  white-space: nowrap;
+}
+
+@media (max-width: 600px) {
+  .activity-item {
+    grid-template-columns: auto 1fr;
+  }
+
+  .activity-item time {
+    grid-column: 2;
+  }
+}
+
+.upcoming-interviews {
+  margin-bottom: 1.5rem;
+}
+
+.upcoming-interview-list {
+  display: grid;
+  gap: 0.8rem;
+}
+
+.upcoming-interview-card {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto auto;
+  gap: 1rem;
+  align-items: center;
+  padding: 1rem;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  background: var(--surface-alt);
+}
+
+.upcoming-interview-card strong {
+  color: var(--text);
+}
+
+.upcoming-interview-card p {
+  margin: 0.25rem 0;
+  color: var(--text-muted);
+}
+
+.upcoming-interview-card span {
+  color: var(--text-muted);
+  font-size: 0.85rem;
+}
+
+.interview-date {
+  display: grid;
+  gap: 0.2rem;
+  text-align: right;
+}
+
+@media (max-width: 700px) {
+  .upcoming-interview-card {
+    grid-template-columns: 1fr;
+  }
+
+  .interview-date {
+    text-align: left;
+  }
+}
+
+.conversion-metrics {
+  margin-bottom: 1.5rem;
+}
+
+.conversion-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1rem;
+}
+
+.conversion-card {
+  padding: 1.25rem;
+  text-align: center;
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  background: var(--surface-alt);
+}
+
+.conversion-card strong {
+  display: block;
+  margin-bottom: 0.4rem;
+  color: var(--primary);
+  font-size: 2rem;
+}
+
+.conversion-card p {
+  margin: 0;
+  color: var(--text-muted);
+  font-weight: 600;
+}
+
+@media (max-width: 700px) {
+  .conversion-grid {
+    grid-template-columns: 1fr;
+  }
+}

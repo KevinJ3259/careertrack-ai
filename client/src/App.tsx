@@ -20,6 +20,10 @@ import ReminderManager from "./components/ReminderManager";
 import UpcomingReminders from "./components/UpcomingReminders";
 import ApplicationKanban from "./components/ApplicationKanban";
 import ResumeOptimizer from "./components/ResumeOptimizer";
+import DashboardKpis from "./components/DashboardKpis";
+import DashboardRecommendations from "./components/DashboardRecommendations";
+import RecentActivity from "./components/RecentActivity";
+import UpcomingInterviews from "./components/UpcomingInterviews";
 
 import type {
   Interview,
@@ -28,6 +32,7 @@ import type {
   ResumeVersion,
   Status
 } from "./types";
+import ConversionMetrics from "./components/ConversionMetrics";
 
 const statuses: Status[] = [
   "SAVED",
@@ -545,17 +550,43 @@ const dashboardApplications = useMemo(() => {
         onFilterChange={setFilter}
       />
 
+      <DashboardKpis
+        applications={applications}
+        interviews={interviews}
+        reminders={reminders}
+      />
+
+      <DashboardRecommendations
+        applications={applications}
+        interviews={interviews}
+        reminders={reminders}
+      />
+
+      <RecentActivity
+        applications={applications}
+        interviews={interviews}
+        reminders={reminders}
+      />
+
+      <UpcomingInterviews
+        interviews={interviews}
+        applications={applications}
+        onPrepare={() => scrollToSection("interviews")}
+      />
+
+      <ConversionMetrics applications={applications} />
+
       <DashboardFilters
-  filters={dashboardFilters}
-  companies={companies}
-  locations={locations}
-  statuses={statuses}
-  onChange={setDashboardFilters}
-  onClear={() =>
-    setDashboardFilters({
-      status: "ALL",
-      company: "",
-      location: ""
+        filters={dashboardFilters}
+        companies={companies}
+        locations={locations}
+        statuses={statuses}
+        onChange={setDashboardFilters}
+        onClear={() =>
+      setDashboardFilters({
+        status: "ALL",
+        company: "",
+        location: ""
     })
   }
 />
